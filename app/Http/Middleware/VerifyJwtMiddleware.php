@@ -8,7 +8,6 @@ use Exception;
 
 class VerifyJwtMiddleware
 {
-
     /**
      * @param $request
      * @param Closure $next
@@ -17,23 +16,13 @@ class VerifyJwtMiddleware
     public function handle($request, Closure $next)
     {
         try {
-            convertObjToArray(getDataFromJWT($request), $o365Data);
-            if (empty($o365Data)) {
-                return getResponse(
-                    Response::HTTP_UNAUTHORIZED,
-                    Response::$statusTexts[Response::HTTP_UNAUTHORIZED],
-                    [],
-                    Response::HTTP_UNAUTHORIZED
-                );
+            $data = getDataFromJWT($request);
+
+            if (empty($data)) {
+                return getResponse(null, Response::$statusTexts[Response::HTTP_UNAUTHORIZED], false, Response::HTTP_UNAUTHORIZED, Response::HTTP_UNAUTHORIZED);
             }
-            $request->attributes->add(['o365_data' => $o365Data]);
         } catch (Exception $e) {
-            return getResponse(
-                Response::HTTP_UNAUTHORIZED,
-                $e->getMessage(),
-                [],
-                Response::HTTP_UNAUTHORIZED
-            );
+            return getResponse(null, $e->getMessage(), false, Response::HTTP_UNAUTHORIZED, Response::HTTP_UNAUTHORIZED);
         }
         return $next($request);
     }

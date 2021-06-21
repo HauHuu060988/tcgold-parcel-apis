@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cp .env.master .env
+cp .env.development .env
 
 # Install/update composer dependecies
 echo -e "\n----------"

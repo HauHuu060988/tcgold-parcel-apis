@@ -3,34 +3,29 @@
 namespace App\Repositories\v1;
 
 use Illuminate\Support\Facades\Crypt;
+use Faker;
 
 class UserRepository
 {
-
     /**
-     * @return array
+     * @param $username
+     * @return string
      */
-    public function testApi()
+    public function register($username)
     {
-        $dataJWT = [
-            'user' => 'hauhuu',
+        $faker = Faker\Factory::create();
+        $data = [
+            'user' => $username,
             'attributes' => [
                 'profile' => [
-                    'username' => 'admin',
-                    'password' => 'admin',
+                    'firstname' => $faker->firstName,
+                    'lastname' => $faker->lastName,
                 ]
             ]
         ];
 
         //Set JWT
-        $jwt = setDataFromJWT($dataJWT);
-        $jwt = Crypt::encryptString($jwt);
-        return [
-            'jwt' => $jwt,
-            'server_host' => $_SERVER['SERVER_ADDR'],
-            'server_name' => $_SERVER['SERVER_NAME'],
-            'server_port' => $_SERVER['SERVER_PORT'],
-            'branch' => 'master',
-        ];
+        $jwt = setDataFromJWT($data);
+        return Crypt::encryptString($jwt);
     }
 }

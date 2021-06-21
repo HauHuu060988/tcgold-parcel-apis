@@ -6,7 +6,6 @@ use App\Repositories\v1\ParcelRepository;
 use App\Http\Requests\v1\ParcelRequest;
 use Exception;
 use Illuminate\Http\Response as Response;
-use Faker;
 
 class ParcelController
 {
@@ -83,7 +82,7 @@ class ParcelController
      * @param ParcelRequest $request
      * @return Response
      */
-    public function calculateParcel(ParcelRequest $request)
+    public function calculateParcels(ParcelRequest $request)
     {
         $parcelIds = $request->query('parcelIds');
         $rsCalculateParcel = $this->parcelRepository->calculateParcel($parcelIds);

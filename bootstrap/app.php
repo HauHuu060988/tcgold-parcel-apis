@@ -81,7 +81,7 @@ $app->middleware([
 
 $app->routeMiddleware([
     'backend' => App\Http\Middleware\BackendMiddleware::class,
-    'verify_jwt' => App\Http\Middleware\VerifyJwtMiddleware::class,
+    'authenticate' => App\Http\Middleware\VerifyJwtMiddleware::class,
 ]);
 /*
 |--------------------------------------------------------------------------

@@ -2,21 +2,23 @@
 
 namespace App\Http\Controllers\Backend\v1;
 
+use App\Http\Requests\v1\UserRequest;
 use App\Repositories\v1\UserRepository;
+use Illuminate\Http\Response as Response;
 
 class UserController
 {
-    protected $userBusinessLogic;
+    protected $userRepository;
 
-    public function __construct(UserRepository $userBusinessLogic)
+    public function __construct(UserRepository $userRepository)
     {
-        $this->userBusinessLogic = $userBusinessLogic;
+        $this->userRepository = $userRepository;
     }
 
-    public function testApi()
+    public function register(UserRequest $request)
     {
-        $dataTest = $this->userBusinessLogic->testApi();
-        return getResponse(INT_VALUE_FALSE, 'Success', $dataTest);
+        $jwt = $this->userRepository->register($request->get('username'));
+        return getResponse(['jwt' => $jwt], null, true, null, Response::HTTP_OK);
     }
 
 }

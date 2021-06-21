@@ -1,14 +1,18 @@
 <?php
-$router->GROUP(['namespace' => 'Backend\v1', 'prefix' => 'api/backend/v1/'], function () use ($router) {
-    $router->GET('/test-api', 'UserController@testApi');
+$router->group(['namespace' => 'Backend\v1', 'prefix' => 'api/v1/'], function () use ($router) {
+    $router->post('register', ['as' => 'register', 'uses' => 'UserController@register']);
+
     /*
     |--------------------------------------------------------------------------
     |
     |--------------------------------------------------------------------------
     */
-    $router->GET('/parcels/{id}', ['as' => 'getParcel', 'uses' => 'ParcelController@getParcel']);
-    $router->POST('/parcels/', ['as' => 'createParcel', 'uses' => 'ParcelController@createParcel']);
-    $router->PUT('/parcels/{id}', ['as' => 'updateParcel', 'uses' => 'ParcelController@updateParcel']);
-    $router->DELETE('/parcels/{id}', ['as' => 'deleteParcel', 'uses' => 'ParcelController@deleteParcel']);
-    $router->GET('/parcels', ['as' => 'calculateParcel', 'uses' => 'ParcelController@calculateParcel']);
+
+    $router->group(['middleware' => ['authenticate']], function () use ($router) {
+        $router->get('parcels/{id}', ['as' => 'getParcel', 'uses' => 'ParcelController@getParcel']);
+        $router->post('parcels/', ['as' => 'createParcel', 'uses' => 'ParcelController@createParcel']);
+        $router->put('parcels/{id}', ['as' => 'updateParcel', 'uses' => 'ParcelController@updateParcel']);
+        $router->delete('parcels/{id}', ['as' => 'deleteParcel', 'uses' => 'ParcelController@deleteParcel']);
+        $router->get('parcels', ['as' => 'calculateParcels', 'uses' => 'ParcelController@calculateParcels']);
+    });
 });

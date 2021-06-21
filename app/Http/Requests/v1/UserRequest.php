@@ -1,12 +1,16 @@
-<?php
+<?php /** @noinspection PhpUndefinedMethodInspection */
 
 namespace App\Http\Requests\v1;
 
-class UserRequest extends BaseRequest
+use Urameshibr\Requests\FormRequest;
+use Illuminate\Http\Response as Response;
+
+class UserRequest extends FormRequest
 {
     /**
-     * [authorize description]
-     * @return bool
+     * Determine if the request passes the authorization check.
+     *
+     * @return boolean
      */
     public function authorize()
     {
@@ -14,59 +18,29 @@ class UserRequest extends BaseRequest
     }
 
     /**
-     * [response description]
-     * @param array $errors [description]
-     * @return json         [description]
+     * Get the proper failed validation response for the request.
+     *
+     * @param array $errors
+     * @return mixed
      */
     public function response(array $errors)
     {
-        return $this->__returnResponseErrors($errors);
+        $msgError = [];
+        foreach ($errors as $key => $value) {
+            $msgError = array_merge($msgError, $value);
+        }
+        return getResponse($msgError, null, false, null, Response::HTTP_BAD_REQUEST);
     }
 
     /**
-     * set rule for table groups.
+     * Get the validation rules that apply to the request.
+     *
      * @return array
      */
     public function rules()
     {
-        if (strtoupper($this->method()) == 'POST') {
-            $rules = [];
-            foreach ($this->files as $key => $value) {
-                if (isset($key) && $key == 'image') {
-                    $rules[$key] = 'mimes:jpeg,bmp,png,jpg';
-                }
-            }
-            return $rules;
-        } else {
-            return [];
-        }
-    }
-
-    /**
-     * [messages description]
-     * @return array [description]
-     */
-    public function messages()
-    {
         return [
-            'phone.regex' => trans('validation.userPhoneRegex'),
-            'phone.max' => trans('validation.userPhoneRegex'),
-            'image.mimes' => trans('validation.userImageMimes'),
-            'product_group_id.required' => trans('validation.userProductGroupIdRequired'),
-            'product_group_id.integer' => trans('validation.userProductGroupIdInteger'),
+            'username' => ['required','max:255'],
         ];
     }
-
-    // /**
-    //  *  Filters to be applied to the input.
-    //  *
-    //  * @return array
-    //  */
-    // public function filters()
-    // {
-    //     return [
-    //         'email' => 'trim|lowercase',
-    //         'name' => 'trim|capitalize|escape'
-    //     ];
-    // }
 }
